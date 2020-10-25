@@ -1,0 +1,52 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+EXITCODE=0
+
+LIGHTRED='\033[1;31m'
+NOCOLOR='\033[0m'
+echo -ne "${LIGHTRED}"
+
+# Make sure TAR1090_URL has been set
+# TODO: Make sure we can access "${TAR1090_URL%/}/data/aircraft.json"
+if [[ -z "$TAR1090_URL" ]]; then
+    echo "ERROR: TAR1090_DATA_URL environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$RECEIVER_LAT" ]]; then
+    echo "ERROR: RECEIVER_LAT environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$RECEIVER_LONG" ]]; then
+    echo "ERROR: RECEIVER_LONG environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$TWITTER_CONSUMER_KEY" ]]; then
+    echo "ERROR: TWITTER_CONSUMER_KEY environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$TWITTER_CONSUMER_SECRET" ]]; then
+    echo "ERROR: TWITTER_CONSUMER_SECRET environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$TWITTER_ACCESS_TOKEN" ]]; then
+    echo "ERROR: TWITTER_ACCESS_TOKEN environment variable not set"
+    EXITCODE=1
+fi
+if [[ -z "$TWITTER_ACCESS_TOKEN_SECRET" ]]; then
+    echo "ERROR: TWITTER_ACCESS_TOKEN_SECRET environment variable not set"
+    EXITCODE=1
+fi
+if [[ -n "$FA_ENABLE" ]]; then
+    if [[ -z "$FA_USERNAME" ]]; then
+        echo "ERROR: FA_USERNAME environment variable required if FA_ENABLE is set"
+        EXITCODE=1
+    fi
+    if [[ -z "$FA_API_KEY" ]]; then
+        echo "ERROR: FA_API_KEY environment variable required if FA_ENABLE is set"
+        EXITCODE=1
+    fi
+fi
+
+echo -ne "${NOCOLOR}"
+exit $EXITCODE

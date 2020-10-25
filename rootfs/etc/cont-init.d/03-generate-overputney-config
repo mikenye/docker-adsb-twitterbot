@@ -1,0 +1,108 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+TWEET_TEMPLATE_DEFAULT='#${flight} ${regis} ${plane} ${oper}: ${dist_mi} mi away @ ${alt_ft} ft and ${el}° frm hrzn, heading ${heading} @ ${speed_mph}mi/h ${time}.'
+FA_TWEET_TEMPLATE_DEFAULT='#${flight} : #${orig_alt} (${orig_city}) to #${dest_alt} (${dest_city}). ${dist_mi} mi away @ ${alt_ft} ft and ${el}° frm hrzn, heading ${heading} @ ${speed_mph}mi/h ${time}.'
+TWEET_HASHTAGS_DEFAULT='#OverPutney #Putney #SW15 #ADSB #dump1090'
+
+# Build configuration
+{
+    echo "[abovetustin]"
+    echo "driver = dump1090"
+    echo "data_url = ${TAR1090_URL%/}/data/aircraft.json"
+    echo "map_url = ${TAR1090_URL%/}/"
+    echo "request_timeout = ${TAR1090_REQUEST_TIMEOUT:60}"
+    echo ""
+    echo '; An airplane is only tracked and tweeted when it enters the "alarm area" the alarm area'
+    echo '; is defined by the "distance_alarm" in miles, and the elevation_alarm in degrees from'
+    echo '; the horizon. If any airplane travels closer than the distance_alarm or higher than the'
+    echo '; elevation_alarm it will be tracked until it leaves the alarm area.  After'
+    echo '; "wait_x_updates" updates it will then make the tweet.  It waits "sleep_time" between'
+    echo '; each update.'
+    echo "distance_alarm = ${ABOVETUSTIN_DISTANCE_ALARM:3}"
+    echo "elevation_alarm = ${ABOVETUSTIN_ELEVATION_ALARM:60}"
+    echo "wait_x_updates = ${ABOVETUSTIN_WAIT_X_UPDATES:3}"
+    echo ""
+    echo "sleep_time = ${ABOVETUSTIN_SLEEP_TIME:0.5}"
+    echo "image_width = ${ABOVETUSTIN_IMAGE_WIDTH:1280}"
+    echo "image_height = ${ABOVETUSTIN_IMAGE_HEIGHT:720}"
+    echo ""
+    echo "[tweet]"
+    echo '; tweet_template is a template for the tweet.  Insert variables into the tweet by adding ${VAR_NAME}.'
+    echo '; You may use the following variables:'
+    echo ';    VAR NAME       |                DESCRIPTION'
+    echo '; ------------------|---------------------------------------------------------'
+    echo ';    flight         | flight name and number if available, otherwise it will be the icao code'
+    echo ';    icao           | ICAO code'
+    echo ';    dist_mi        | Minimum Distance in miles'
+    echo ';    dist_km        | Minimum Distance in kilometers'
+    echo ';    dist_nm        | Minimum Distance in nautical miles'
+    echo ';    alt_ft         | Altitude at the minimum distance in feet.'
+    echo ';    alt_m          | Altitude at the minimum distance in meters.'
+    echo ';    el             | Elevation angle at the minimum distance.'
+    echo ';    az             | Azimuth angle at the minimum distance.'
+    echo ';    heading        | Heading of aircraft at the minimum distance displayed as N, NW, W, SW, S, SE, E, or NE.'
+    echo ';    speed_mph      | Speed of the aircraft at the minimum distance in mi/h.'
+    echo ';    speed_kmph     | Speed of the aircraft at the minimum distance in km/h.'
+    echo ';    speed_kts      | Speed of the aircraft at the minimum distance in knots.'
+    echo ';    time           | Time when the aircraft is at the minimum distance.'
+    echo ';    rssi           | Signal strength in dB at the minimum distance.'
+    echo ';    vert_rate_ftpm | The vertical speed at the minimum distance in feet/minute.'
+    echo ';    vert_rate_mpm  | The vertical speed at the minimum distance in meters/minute.'
+    echo ';    squawk         | The squawk code of the aircraft'
+    echo ';    orig_name      | FlightAware API - name of origin airport'
+    echo ';    orig_city      | FlightAware API - name of origin city'
+    echo ';    orig_alt       | FlightAware API - origin airport IATA code (ICAO code if IATA not specified)'
+    echo ';    orig_code      | FlightAware API - origin airport ICAO code'
+    echo ';    dest_name      | FlightAware API - name of destination airport'
+    echo ';    dest_city      | FlightAware API - name of destination city'
+    echo ';    dest_alt       | FlightAware API - destination airport IATA code (ICAO code if IATA not specified)'
+    echo ';    dest_code      | FlightAware API - destination airport ICAO code'
+    echo ';    plane          | JoshDouch API - aircraft type'
+    echo ';    regis          | JoshDouch API - aircraft registration'
+    echo ';    oper           | JoshDouch API - aircraft operator'
+    echo ';'
+    echo '; $tweet_template will be used when Flightaware API is not enabled or no sufficent data has been received.'
+    echo '; added regis, plane, and oper for data from api.joshdouch.me'
+    echo ''
+    echo "tweet_template =${TWEET_TEMPLATE:$TWEET_TEMPLATE_DEFAULT}"
+    echo ''
+    echo '; $fa_tweet_template will replace $tweet_template when enough data is gathered from FA API call (see flightaware section below)'
+    echo "fa_tweet_template =${FA_TWEET_TEMPLATE:$FA_TWEET_TEMPLATE_DEFAULT}"
+    echo ''
+    echo "default_hashtags =${TWEET_HASHTAGS:$TWEET_HASHTAGS_DEFAULT}"
+    echo ''
+    echo '[receiver]'
+    echo "latitude = $RECEIVER_LAT"
+    echo "longitude = $RECEIVER_LONG"
+    echo ''
+    echo '[twitter]'
+    echo "consumer_key = $TWITTER_CONSUMER_KEY"
+    echo "consumer_secret = $TWITTER_CONSUMER_SECRET"
+    echo "access_token = $TWITTER_ACCESS_TOKEN"
+    echo "access_token_secret = $TWITTER_ACCESS_TOKEN_SECRET"
+    echo ''
+    echo '[flightaware]'
+    echo '; FlightAware API allows to get more information on the flights. Basic API access is now free'
+    echo '; and if you are FA feeder, your request limit is doubled. For more details check:'
+    echo '; https://flightaware.com/commercial/flightxml/pricing_class.rvt'
+    if [[ -n "$FA_ENABLE" ]]; then
+        echo 'fa_enable = True'
+    else
+        echo 'fa_enable = False'
+    fi
+    echo "fa_username = $FA_USERNAME"
+    echo "fa_api_key = $FA_API_KEY"
+    echo ''
+    echo '[crop]'
+    if [[ -n "$CROP_DISABLE" ]]; then
+        echo 'do_crop = False'
+    else
+        echo 'do_crop = True'
+    fi
+    echo "crop_x = ${CROP_X:0}"
+    echo "crop_y = ${CROP_Y:0}"
+    echo "crop_width = ${CROP_WIDTH:900}"
+    echo "crop_height = ${CROP_HEIGHT:720}"
+    echo ""
+} > "$PATH_OVERPUTNEY/config.ini"
