@@ -22,6 +22,7 @@ RUN set -x && \
     KEPT_PACKAGES+=(zlib1g-dev) && \
     KEPT_PACKAGES+=(libjpeg62-turbo) && \
     KEPT_PACKAGES+=(libjpeg-dev) && \
+    TEMP_PACKAGES+=(build-essential) && \
     # Dependencies for s6-overlay
     TEMP_PACKAGES+=(curl) && \
     TEMP_PACKAGES+=(gnupg2) && \
