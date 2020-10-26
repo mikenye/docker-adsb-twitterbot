@@ -19,6 +19,7 @@ RUN set -x && \
     TEMP_PACKAGES+=(python3-pip) && \
     TEMP_PACKAGES+=(python3-setuptools) && \
     TEMP_PACKAGES+=(python3-wheel) && \
+    KEPT_PACKAGES+=(zlib1g-dev) && \
     # Dependencies for s6-overlay
     TEMP_PACKAGES+=(curl) && \
     TEMP_PACKAGES+=(gnupg2) && \
