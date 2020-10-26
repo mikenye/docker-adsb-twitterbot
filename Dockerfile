@@ -19,6 +19,7 @@ RUN set -x && \
     TEMP_PACKAGES+=(python3-pip) && \
     TEMP_PACKAGES+=(python3-setuptools) && \
     TEMP_PACKAGES+=(python3-wheel) && \
+    TEMP_PACKAGES+=(python3-dev) && \
     KEPT_PACKAGES+=(zlib1g-dev) && \
     KEPT_PACKAGES+=(libjpeg62-turbo) && \
     KEPT_PACKAGES+=(libjpeg-dev) && \
