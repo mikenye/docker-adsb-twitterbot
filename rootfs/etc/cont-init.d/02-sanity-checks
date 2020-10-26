@@ -10,7 +10,7 @@ echo -ne "${LIGHTRED}"
 # Make sure TAR1090_URL has been set
 # TODO: Make sure we can access "${TAR1090_URL%/}/data/aircraft.json"
 if [[ -z "$TAR1090_URL" ]]; then
-    echo "ERROR: TAR1090_DATA_URL environment variable not set"
+    echo "ERROR: TAR1090_URL environment variable not set"
     EXITCODE=1
 fi
 if [[ -z "$RECEIVER_LAT" ]]; then
