@@ -20,6 +20,7 @@ RUN set -x && \
     TEMP_PACKAGES+=(python3-setuptools) && \
     TEMP_PACKAGES+=(python3-wheel) && \
     KEPT_PACKAGES+=(zlib1g-dev) && \
+    KEPT_PACKAGES+=(libjpeg9) && \
     # Dependencies for s6-overlay
     TEMP_PACKAGES+=(curl) && \
     TEMP_PACKAGES+=(gnupg2) && \
