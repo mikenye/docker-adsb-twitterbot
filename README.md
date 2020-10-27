@@ -4,6 +4,16 @@ An implementation of [shbisson/OverPutney](https://github.com/shbisson/OverPutne
 
 OverPutney is an ADS-B Twitter Bot. It tracks airplanes and then tweets whenever an airplane flies overhead. It is a fork of the original AboveTustin bot, adding support for Josh Douch's free ICAO lookup APIs. It also uses chromedriver for browser interactions rather than the deprecated PhantomJS webdriver.
 
+## Up and Running
+
+### Generate Twitter APIs
+
+1. Create twitter account
+2. Create dev account & then verify
+3. Create app
+4. Change app to read/write permission
+5. THEN generate keys
+
 ## Environment Variables
 
 An airplane is only tracked and tweeted when it enters the "alarm area". The alarm area is defined by the `ABOVETUSTIN_DISTANCE_ALARM` in miles, and the `ABOVETUSTIN_ELEVATION_ALARM` in degrees from the horizon. If any airplane travels closer than `ABOVETUSTIN_DISTANCE_ALARM` or higher than the `ABOVETUSTIN_ELEVATION_ALARM`, it will be tracked until it leaves the alarm area.  After `ABOVETUSTIN_WAIT_X_UPDATES` updates it will then make the tweet. It waits `ABOVETUSTIN_SLEEP_TIME` between each update.
