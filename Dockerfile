@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 
-ENV URL_OVERPUTNEY_REPO="https://github.com/shbisson/OverPutney.git" \
+ENV URL_OVERPUTNEY_REPO="https://github.com/mikenye/OverPutney.git" \
     PATH_OVERPUTNEY="/opt/overputney" \
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
